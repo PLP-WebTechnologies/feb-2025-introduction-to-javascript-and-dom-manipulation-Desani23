@@ -5,50 +5,94 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JavaScript DOM Manipulation</title>
     <style>
-        /* Basic styling for demonstration */
-        .highlight {
-            background-color: yellow;
-            font-weight: bold;
+        body { font-family: sans-serif; margin: 20px; background-color: #f4f4f4; color: #333; }
+        header, footer { text-align: center; padding: 10px 0; background-color: #333; color: white; }
+        main { background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        section { margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #eee; }
+        h1, h2 { color: #0056b3; }
+        button {
+            background-color: #007bff; color: white; border: none; padding: 10px 15px;
+            margin: 5px; border-radius: 5px; cursor: pointer; transition: background-color 0.3s ease;
         }
-        .new-element {
-            border: 1px solid green;
-            padding: 10px;
-            margin-top: 10px;
-            background-color: #e6ffe6;
+        button:hover { background-color: #0056b3; }
+        input[type="text"] { padding: 8px; margin-right: 5px; border: 1px solid #ccc; border-radius: 4px; }
+        .highlight { background-color: #ffc107; color: black; padding: 5px; border-radius: 3px; }
+        .interactive-box {
+            width: 200px; height: 100px; background-color: lightcoral;
+            display: flex; align-items: center; justify-content: center;
+            margin-top: 10px; transition: all 0.3s ease-in-out;
+            border: 2px solid transparent;
         }
+        .interactive-box-hover { background-color: lightseagreen; transform: scale(1.1); border-color: darkgreen; }
+        .dynamic-list-item {
+            padding: 8px; margin: 5px 0; background-color: #e9ecef;
+            border-radius: 4px; display: flex; justify-content: space-between; align-items: center;
+        }
+        .dynamic-list-item button { background-color: #dc3545; font-size: 0.8em; padding: 5px 8px; }
+        .dynamic-list-item button:hover { background-color: #c82333; }
+        .hidden { display: none; }
+        .complex-style {
+            border: 3px dashed orangered;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
+            transform: rotate(-2deg);
+        }
+        img#changeableImage { max-width: 200px; height: auto; margin-top: 10px; border: 1px solid #ccc; }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Dynamic Web Page</h1>
+        <h1>DOM Interactions</h1>
     </header>
 
     <main>
         <section>
-            <h2>Content Section</h2>
-            <p id="textToChange">This is the original text. Click the button below to change it!</p>
-            <button id="changeTextBtn">Change Text</button>
-        </section>
-
-        <section>
-            <h2>Style Modifier</h2>
-            <p id="styleParagraph">This paragraph's style will be modified.</p>
-            <button id="changeStyleBtn">Change Style</button>
-        </section>
-
-        <section>
-            <h2>Element Manipulation</h2>
-            <div id="elementContainer">
-                <p>This is an initial element inside the container.</p>
+            <h2>1. Dynamic Text & Attributes</h2>
+            <div>
+                <input type="text" id="textInput" placeholder="Enter text here">
+                <button id="updateTextBtn">Update Paragraph</button>
+                <p id="dynamicParagraph">This text will be updated by the input above.</p>
             </div>
-            <button id="addElementBtn">Add Element</button>
-            <button id="removeElementBtn">Remove Last Added Element</button>
+            <div>
+                <button id="changeImageBtn">Change Image</button>
+                <img src="https://via.placeholder.com/200x100.png?text=Image+1" alt="Placeholder Image 1" id="changeableImage">
+            </div>
+        </section>
+
+        <section>
+            <h2>2. CSS Styles & Class Toggling</h2>
+            <p id="styleTargetParagraph">This paragraph will have its styles changed and classes toggled.</p>
+            <button id="toggleClassBtn">Toggle Complex Style</button>
+            <div id="interactiveBox" class="interactive-box">Hover over me!</div>
+        </section>
+
+        <section>
+            <h2>3. Dynamic List Management</h2>
+            <div>
+                <input type="text" id="listItemInput" placeholder="New list item">
+                <button id="addItemBtn">Add Item</button>
+                <button id="cloneListBtn">Clone List</button>
+            </div>
+            <ul id="dynamicList">
+                <li class="dynamic-list-item"><span>Initial Item 1</span> <button class="remove-item-btn">Remove</button></li>
+            </ul>
+            <div id="clonedElementsContainer">
+                <h3>Cloned Lists/Items:</h3>
+            </div>
+        </section>
+
+        <section>
+            <h2>4. Toggle Element Visibility</h2>
+            <button id="toggleVisibilityBtn">Toggle Content Visibility</button>
+            <article id="toggleableContent" class="hidden">
+                <h3>This is a Toggleable Section</h3>
+                <p>This content can be shown or hidden by clicking the button above. This demonstrates how to control the display of elements dynamically.</p>
+            </article>
         </section>
     </main>
 
     <footer>
-        <p>&copy; 2025 Oluwadamilola Ilupeju</p>
+        <p>&copy; <span id="currentYear"></span> DOM Demo</p>
     </footer>
 
     <script src="script.js"></script>

@@ -1,73 +1,127 @@
-// Wait for the DOM to be fully loaded before running scripts
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
+    const gebi = (id) => document.getElementById(id);
 
-    // --- 1. Change text content dynamically ---
-    const textToChangeElement = document.getElementById('textToChange');
-    const changeTextButton = document.getElementById('changeTextBtn');
-
-    if (textToChangeElement && changeTextButton) {
-        changeTextButton.addEventListener('click', function() {
-            textToChangeElement.textContent = 'The text has been successfully changed by JavaScript!';
-        });
-    } else {
-        console.error('Could not find elements for text changing.');
+    // --- Update current year in footer ---
+    const currentYearEl = gebi('currentYear');
+    if (currentYearEl) {
+        currentYearEl.textContent = new Date().getFullYear();
     }
 
-    // --- 2. Modify CSS styles via JavaScript ---
-    const styleParagraphElement = document.getElementById('styleParagraph');
-    const changeStyleButton = document.getElementById('changeStyleBtn');
+    // --- 1. Dynamic Text & Attribute Modification ---
+    const textInput = gebi('textInput');
+    const updateTextBtn = gebi('updateTextBtn');
+    const dynamicParagraph = gebi('dynamicParagraph');
+    const changeImageBtn = gebi('changeImageBtn');
+    const changeableImage = gebi('changeableImage');
+    let imageToggle = false;
 
-    if (styleParagraphElement && changeStyleButton) {
-        changeStyleButton.addEventListener('click', function() {
-            styleParagraphElement.style.color = 'blue';
-            styleParagraphElement.style.fontSize = '20px';
-            styleParagraphElement.style.fontWeight = 'bold';
-            styleParagraphElement.classList.add('highlight'); // Adds a class defined in <style>
+    if (updateTextBtn && textInput && dynamicParagraph) {
+        updateTextBtn.addEventListener('click', () => {
+            dynamicParagraph.textContent = textInput.value || "Please enter some text.";
+            textInput.value = '';
         });
-    } else {
-        console.error('Could not find elements for style changing.');
+        textInput.addEventListener('input', () => {
+            dynamicParagraph.textContent = textInput.value || "Type to see live update...";
+        });
     }
 
-    // --- 3. Add or remove an element when a button is clicked ---
-    const elementContainer = document.getElementById('elementContainer');
-    const addElementButton = document.getElementById('addElementBtn');
-    const removeElementButton = document.getElementById('removeElementBtn');
-    let newElementCounter = 0; // To give unique IDs or content to new elements
-
-    if (elementContainer && addElementButton && removeElementButton) {
-        // Function to add an element
-        addElementButton.addEventListener('click', function() {
-            newElementCounter++;
-            const newDiv = document.createElement('div'); // Create a new div element
-            newDiv.textContent = `This is a new element #${newElementCounter} added dynamically.`;
-            newDiv.classList.add('new-element'); // Add a class for styling
-            newDiv.setAttribute('id', `newElement-${newElementCounter}`); // Set a unique ID
-
-            elementContainer.appendChild(newDiv); // Append the new div to the container
-        });
-
-        // Function to remove the last added element
-        removeElementButton.addEventListener('click', function() {
-            // Find the last child that is a div with the class 'new-element'
-            const elementsToRemove = elementContainer.querySelectorAll('.new-element');
-            if (elementsToRemove.length > 0) {
-                elementContainer.removeChild(elementsToRemove[elementsToRemove.length - 1]);
-            } else if (elementContainer.children.length > 1) {
-                // If no 'new-element' class found, remove the last child if it's not the initial paragraph
-                 const lastChild = elementContainer.lastElementChild;
-                 // Ensure we don't remove the initial paragraph if it's the only one left.
-                 // This check could be more robust depending on the exact structure.
-                 if (lastChild && lastChild.tagName.toLowerCase() !== 'p' || elementContainer.children.length > 1 ) {
-                    elementContainer.removeChild(lastChild);
-                 } else {
-                    alert('No more dynamic elements to remove.');
-                 }
+    if (changeImageBtn && changeableImage) {
+        changeImageBtn.addEventListener('click', () => {
+            if (imageToggle) {
+                changeableImage.src = 'https://via.placeholder.com/200x100.png?text=Image+1';
+                changeableImage.alt = 'Placeholder Image 1';
             } else {
-                alert('No more elements to remove or only the initial one remains.');
+                changeableImage.src = 'https://via.placeholder.com/200x100.png?text=Image+2+Changed';
+                changeableImage.alt = 'Placeholder Image 2 - Changed via JS';
+            }
+            imageToggle = !imageToggle;
+        });
+    }
+
+    // --- 2. CSS Style and Class Manipulation ---
+    const styleTargetParagraph = gebi('styleTargetParagraph');
+    const toggleClassBtn = gebi('toggleClassBtn');
+    const interactiveBox = gebi('interactiveBox');
+
+    if (toggleClassBtn && styleTargetParagraph) {
+        toggleClassBtn.addEventListener('click', () => {
+            styleTargetParagraph.classList.toggle('complex-style');
+            styleTargetParagraph.style.color = styleTargetParagraph.classList.contains('complex-style') ? 'orangered' : '';
+        });
+    }
+
+    if (interactiveBox) {
+        interactiveBox.addEventListener('mouseover', () => {
+            interactiveBox.classList.add('interactive-box-hover');
+            interactiveBox.textContent = 'Thanks!';
+        });
+        interactiveBox.addEventListener('mouseout', () => {
+            interactiveBox.classList.remove('interactive-box-hover');
+            interactiveBox.textContent = 'Hover over me!';
+        });
+    }
+
+    // --- 3. Element Creation, Addition, Removal, and Cloning (Dynamic List) ---
+    const listItemInput = gebi('listItemInput');
+    const addItemBtn = gebi('addItemBtn');
+    const dynamicList = gebi('dynamicList');
+    const cloneListBtn = gebi('cloneListBtn');
+    const clonedElementsContainer = gebi('clonedElementsContainer');
+
+    const createListItem = (text) => {
+        const li = document.createElement('li');
+        li.className = 'dynamic-list-item';
+        const span = document.createElement('span');
+        span.textContent = text;
+        const removeBtn = document.createElement('button');
+        removeBtn.textContent = 'Remove';
+        removeBtn.className = 'remove-item-btn';
+        li.appendChild(span);
+        li.appendChild(removeBtn);
+        return li;
+    };
+
+    if (addItemBtn && listItemInput && dynamicList) {
+        addItemBtn.addEventListener('click', () => {
+            const newItemText = listItemInput.value.trim();
+            if (newItemText) {
+                dynamicList.appendChild(createListItem(newItemText));
+                listItemInput.value = '';
+            } else {
+                alert('Please enter text for the list item.');
             }
         });
-    } else {
-        console.error('Could not find elements for adding/removing elements.');
     }
 
+    // Event Delegation for removing list items
+    if (dynamicList) {
+        dynamicList.addEventListener('click', (event) => {
+            if (event.target && event.target.classList.contains('remove-item-btn')) {
+                event.target.closest('.dynamic-list-item').remove();
+            }
+        });
+    }
+
+    if (cloneListBtn && dynamicList && clonedElementsContainer) {
+        cloneListBtn.addEventListener('click', () => {
+            const clonedList = dynamicList.cloneNode(true); // true for deep clone (includes children)
+            clonedList.id = ''; // Avoid duplicate IDs
+
+            const title = document.createElement('h4');
+            title.textContent = `Cloned List (${new Date().toLocaleTimeString()})`;
+            clonedElementsContainer.appendChild(title);
+            clonedElementsContainer.appendChild(clonedList);
+        });
+    }
+
+    // --- 4. Toggle Element Visibility ---
+    const toggleVisibilityBtn = gebi('toggleVisibilityBtn');
+    const toggleableContent = gebi('toggleableContent');
+
+    if (toggleVisibilityBtn && toggleableContent) {
+        toggleVisibilityBtn.addEventListener('click', () => {
+            toggleableContent.classList.toggle('hidden');
+            toggleVisibilityBtn.textContent = toggleableContent.classList.contains('hidden') ? 'Show Content' : 'Hide Content';
+        });
+    }
 });
